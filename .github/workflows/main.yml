@@ -24,11 +24,15 @@ jobs:
         echo '${{ secrets.FIREBASE_SERVICE_ACCOUNT }}' | jq '.' > service-account.json
     - name: Create config.ini
       run: |
+        if [ -z "${{ secrets.FIREBASE_DATABASE_URL }}" ]; then
+          echo "Error: FIREBASE_DATABASE_URL is not set in GitHub Secrets"
+          exit 1
+        fi
         echo '[firebase]' > config.ini
         echo 'database_url = ${{ secrets.FIREBASE_DATABASE_URL }}' >> config.ini
         echo 'project_id = ${{ secrets.FIREBASE_PROJECT_ID }}' >> config.ini
         echo 'storage_bucket = ${{ secrets.FIREBASE_STORAGE_BUCKET }}' >> config.ini
-        echo 'auth_domain = ${{ secrets.FIREBASE_STORAGE_BUCKET }}' >> config.ini
+        echo 'auth_domain = ${{ secrets.FIREBASE_AUTH_DOMAIN }}' >> config.ini
     - name: Run tests
       env:
         GOOGLE_APPLICATION_CREDENTIALS: service-account.json
