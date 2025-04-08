@@ -1,0 +1,5 @@
+python-telegram-bot==20.6
+google-cloud-firestore==2.13.1
+aiohttp==3.9.1
+configparser==6.0.0
+python-dotenv==1.0.0
