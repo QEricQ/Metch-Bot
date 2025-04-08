@@ -104,15 +104,6 @@ async def find_matches(update: Update, context: ContextTypes.DEFAULT_TYPE):
         response += f"👤 *{match['interest_type']}*\n└ 偏好：{match['specific_interest']}\n\n"
     
     await update.message.reply_text(response, parse_mode='Markdown')
-    success_message = f"""
-✅ *游戏偏好设置成功！*
-
-🎮 *游戏：* {game_name}
-🏷 *类型：* {game_type}
-
-使用 /findmatches 寻找玩家
-"""
-    await update.message.reply_text(success_message, parse_mode='Markdown')
 
 # 修改聊天记录存储
 async def chat(update: Update, context: ContextTypes.DEFAULT_TYPE):
