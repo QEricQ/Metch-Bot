@@ -22,7 +22,7 @@ config = configparser.ConfigParser()
 config.read('config.ini')
 
 # 初始化 Firebase Admin SDK
-cred = credentials.Certificate("FIREBASE_SERVICE_ACCOUNT")
+cred = credentials.Certificate("service-account")
 firebase_admin.initialize_app(cred, {
     'databaseURL': config['firebase']['database_url'],
     'projectId': config['firebase']['project_id'],
