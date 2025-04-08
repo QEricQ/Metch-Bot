@@ -22,7 +22,6 @@ jobs:
     - name: Setup Firebase credentials
       run: |
         echo '${{ secrets.FIREBASE_SERVICE_ACCOUNT }}' | jq '.' > service-account.json
-        echo '${{ secrets.FIREBASE_AUTH_DOMAIN }}' | jq '.' > service-account.json
     - name: Create config.ini
       run: |
         echo "[firebase]" > config.ini
