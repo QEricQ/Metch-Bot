@@ -22,7 +22,11 @@ jobs:
     - name: Setup Firebase credentials
       run: |
         echo "${{ secrets.FIREBASE_SERVICE_ACCOUNT }}" > service-account.json
+        ls -la
+        cat service-account.json
     - name: Run tests
+      env:
+        GOOGLE_APPLICATION_CREDENTIALS: service-account.json
       run: |
         python -m pytest
     - name: Cleanup credentials
