@@ -29,9 +29,16 @@ jobs:
         echo "storage_bucket=${{ secrets.FIREBASE_STORAGE_BUCKET }}" >> config.ini
         echo "database_url=${{ secrets.FIREBASE_DATABASE_URL }}" >> config.ini
         echo "auth_domain=${{ secrets.FIREBASE_AUTH_DOMAIN }}" >> config.ini
+    - name: Validate environment variables
+      run: |
+        if [ -z "${{ secrets.FIREBASE_DATABASE_URL }}" ]; then
+          echo "Error: FIREBASE_DATABASE_URL is not set"
+          exit 1
+        fi
     - name: Run tests
       env:
         GOOGLE_APPLICATION_CREDENTIALS: service-account.json
+        FIREBASE_DATABASE_URL: ${{ secrets.FIREBASE_DATABASE_URL }}
       run: |
         python -m pytest
     - name: Cleanup credentials
