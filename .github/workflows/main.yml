@@ -34,6 +34,8 @@ jobs:
         GOOGLE_APPLICATION_CREDENTIALS: service-account.json
         FIREBASE_DATABASE_URL: ${{ secrets.FIREBASE_DATABASE_URL }}
       run: |
+        echo "Running tests with Firebase configuration:"
+        echo "Database URL: $FIREBASE_DATABASE_URL"
         python -m pytest
     - name: Cleanup credentials
       if: always()
