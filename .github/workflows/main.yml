@@ -25,9 +25,9 @@ jobs:
     - name: Create config.ini
       run: |
         echo "[firebase]" > config.ini
-        echo "project_id=${{ secrets.FIREBASE_SERVICE_ACCOUNT }}" >> config.ini
-        echo "storage_bucket=${{ secrets.FIREBASE_SERVICE_ACCOUNT }}" >> config.ini
-        echo "database_url=${{ secrets.FIREBASE_AUTH_DOMAIN }}" >> config.ini
+        echo "project_id=${{ secrets.FIREBASE_PROJECT_ID }}" >> config.ini
+        echo "storage_bucket=${{ secrets.FIREBASE_STORAGE_BUCKET }}" >> config.ini
+        echo "database_url=${{ secrets.FIREBASE_DATABASE_URL }}" >> config.ini
     - name: Run tests
       env:
         GOOGLE_APPLICATION_CREDENTIALS: service-account.json
