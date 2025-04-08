@@ -24,10 +24,6 @@ jobs:
         echo '${{ secrets.FIREBASE_SERVICE_ACCOUNT }}' | jq '.' > service-account.json
     - name: Create config.ini
       run: |
-        if [ -z "${{ secrets.FIREBASE_DATABASE_URL }}" ]; then
-          echo "Error: FIREBASE_DATABASE_URL is not set in GitHub Secrets"
-          exit 1
-        fi
         echo '[firebase]' > config.ini
         echo 'database_url = ${{ secrets.FIREBASE_AUTH_DOMAIN }}' >> config.ini
         echo 'project_id = ${{ secrets.FIREBASE_PROJECT_ID }}' >> config.ini
