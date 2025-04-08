@@ -24,7 +24,6 @@ jobs:
         echo '${{ secrets.FIREBASE_SERVICE_ACCOUNT }}' | jq '.' > service-account.json
     - name: Create config.ini
       run: |
-        echo "[firebase]" > config.ini
         echo "project_id=${{ secrets.FIREBASE_SERVICE_ACCOUNT }}" >> config.ini
         echo "storage_bucket=${{ secrets.FIREBASE_SERVICE_ACCOUNT }}" >> config.ini
         echo "database_url=${{ secrets.FIREBASE_AUTH_DOMAIN }}" >> config.ini
