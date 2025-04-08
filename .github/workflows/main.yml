@@ -34,28 +34,30 @@ jobs:
         echo "[firebase]" >> config.ini
         echo "project_id=${{ secrets.FIREBASE_PROJECT_ID }}" >> config.ini
         echo "api_key=${{ secrets.FIREBASE_API_KEY }}" >> config.ini
-        echo "database_url=${{ secrets.FIREBASE_DATABASE_URL }}" >> config.ini
+        echo "database_url=\"${{ secrets.FIREBASE_DATABASE_URL }}\"" >> config.ini
         echo "auth_domain=${{ secrets.FIREBASE_AUTH_DOMAIN }}" >> config.ini
         echo "storage_bucket=${{ secrets.FIREBASE_STORAGE_BUCKET }}" >> config.ini
         echo "messaging_sender_id=${{ secrets.FIREBASE_MESSAGING_SENDER_ID }}" >> config.ini
         echo "app_id=${{ secrets.FIREBASE_APP_ID }}" >> config.ini
         # 验证database_url是否正确写入
         echo "\nVerifying database_url in config.ini:"
-        grep database_url config.ini
+        cat config.ini | grep database_url
         echo "[google_cloud]" >> config.ini
         echo "project_id=${{ secrets.GOOGLE_CLOUD_PROJECT_ID }}" >> config.ini
         echo "region=${{ secrets.GOOGLE_CLOUD_REGION }}" >> config.ini
     - name: Run tests
       env:
         GOOGLE_APPLICATION_CREDENTIALS: service-account.json
-        FIREBASE_DATABASE_URL: ${{ secrets.FIREBASE_DATABASE_URL }}
+        FIREBASE_DATABASE_URL: "${{ secrets.FIREBASE_DATABASE_URL }}"
       run: |
         echo "Running tests with Firebase configuration:"
-        echo "Database URL: $FIREBASE_DATABASE_URL"
+        echo "Database URL: \"$FIREBASE_DATABASE_URL\""
         echo "Verifying config.ini content:"
         cat config.ini
         echo "\nVerifying service-account.json exists:"
         ls -l service-account.json
+        echo "\nVerifying environment variables:"
+        env | grep FIREBASE
         echo "\nRunning tests with debug output:"
         python -m pytest -v
     - name: Cleanup credentials
