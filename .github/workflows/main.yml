@@ -22,8 +22,10 @@ jobs:
     - name: Setup Firebase credentials
       run: |
         echo '${{ secrets.FIREBASE_SERVICE_ACCOUNT }}' | jq '.' > service-account.json
-        ls -la
-        cat service-account.json
+    - name: Create config.ini
+      run: |
+        echo '[firebase]' > config.ini
+        echo 'database_url = ${{ secrets.FIREBASE_DATABASE_URL }}' >> config.ini
     - name: Run tests
       env:
         GOOGLE_APPLICATION_CREDENTIALS: service-account.json
