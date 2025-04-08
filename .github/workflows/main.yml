@@ -28,7 +28,8 @@ jobs:
         echo "project_id=${{ secrets.FIREBASE_PROJECT_ID }}" >> config.ini
         echo "storage_bucket=${{ secrets.FIREBASE_STORAGE_BUCKET }}" >> config.ini
         echo "auth_domain=${{ secrets.FIREBASE_AUTH_DOMAIN }}" >> config.ini
-        echo "\n[database]" >> config.ini
+        echo "" >> config.ini
+        echo "[database]" >> config.ini
         echo "url=${{ secrets.FIREBASE_DATABASE_URL }}" >> config.ini
     - name: Run tests
       env:
