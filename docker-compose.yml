@@ -1,5 +1,9 @@
 version: '3.8'
 
+networks:
+  metch-net:
+    driver: bridge
+
 services:
   bot:
     build: .
@@ -7,39 +11,81 @@ services:
       - .:/app
     environment:
       - GOOGLE_APPLICATION_CREDENTIALS=/app/google-credentials.json
+    ports:
+      - "8000:8000"
     restart: always
-    # 添加依赖安装命令
-    command: >
-      sh -c "pip install -r requirements.txt &&
-             python bot.py"
     logging:
       driver: "json-file"
       options:
         max-size: "10m"
         max-file: "3"
+    networks:
+      - metch-net
 
   prometheus:
     image: prom/prometheus:latest
     volumes:
-      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro  # 修改挂载配置
+      - ./prometheus:/etc/prometheus
+      - prometheus_data:/prometheus
     ports:
       - "9090:9090"
-    restart: always
     command:
       - '--config.file=/etc/prometheus/prometheus.yml'
       - '--storage.tsdb.path=/prometheus'
       - '--web.console.libraries=/usr/share/prometheus/console_libraries'
       - '--web.console.templates=/usr/share/prometheus/consoles'
+    restart: always
+    networks:
+      - metch-net
+
+  postgres:
+    image: postgres:15
+    environment:
+      - POSTGRES_USER=grafana
+      - POSTGRES_PASSWORD=grafana
+      - POSTGRES_DB=grafana
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U grafana -d grafana"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    restart: always
+    networks:
+      - metch-net
 
   grafana:
     image: grafana/grafana:latest
     ports:
       - "3000:3000"
     volumes:
-      - grafana-storage:/var/lib/grafana
+      - ./grafana/dashboards:/etc/grafana/dashboards
+      - ./grafana/provisioning/dashboards:/etc/grafana/provisioning/dashboards
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+      - GF_USERS_ALLOW_SIGN_UP=false
+      - GF_AUTH_ANONYMOUS_ENABLED=true
+      - GF_AUTH_ANONYMOUS_ORG_ROLE=Viewer
+      - GF_AUTH_DISABLE_LOGIN_FORM=false
+      - GF_AUTH_BASIC_ENABLED=true
+      - GF_SECURITY_ALLOW_EMBEDDING=true
+      - GF_SECURITY_COOKIE_SAMESITE=none
+      - GF_DATABASE_TYPE=postgres
+      - GF_DATABASE_HOST=postgres
+      - GF_DATABASE_NAME=grafana
+      - GF_DATABASE_USER=grafana
+      - GF_DATABASE_PASSWORD=grafana
+      - GF_AUTH_TOKEN_ROTATION_INTERVAL_MINUTES=10
+      - GF_SECURITY_COOKIE_SECURE=true
+      - GF_SECURITY_COOKIE_NAME=grafana_session
     depends_on:
       - prometheus
+      - postgres
     restart: always
+    networks:
+      - metch-net
 
 volumes:
-  grafana-storage:
+  prometheus_data:
+  postgres_data:
