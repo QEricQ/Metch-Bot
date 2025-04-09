@@ -93,7 +93,6 @@ async def set_preference(update: Update, context: ContextTypes.DEFAULT_TYPE):
         await update.message.reply_text("抱歉，保存失败。请稍后重试。")
 
 # 修改查找匹配的代码
-# 修改查找匹配的代码
 def calculate_interest_similarity(user_prefs, other_prefs):
     # 创建用户兴趣文本
     user_text = f"{user_prefs['interest_type']} {user_prefs['specific_interest']}"
